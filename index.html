@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>سوق الصويرة | وجهتك للتسوق</title>
+  <link rel="stylesheet" href="style.css">
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;900&display=swap" rel="stylesheet">
+</head>
+<body>
+
+<!-- 🔹 شريط التنقل العلوي -->
+<nav class="navbar">
+  <div class="container">
+    <div class="nav-wrapper">
+      <a href="#" class="brand">
+        <span class="brand-icon">🛍️</span>
+        <span class="brand-text">سوق الصويرة</span>
+      </a>
+      <div class="nav-actions">
+        <button class="nav-btn admin-trigger" onclick="openAdminPanel()">⚙️</button>
+        <button class="nav-btn primary-btn" onclick="openPublishModal()">
+          <span>+</span> نشر منتج
+        </button>
+      </div>
+    </div>
+  </div>
+</nav>
+
+<!-- 🔹 قسم البانر الرئيسي -->
+<header class="hero">
+  <div class="hero-overlay"></div>
+  <div class="container hero-content">
+    <h1 class="hero-title">مرحباً بكم في سوق الصويرة</h1>
+    <p class="hero-subtitle">منصة التسوق الأولى — اكتشف، تواصل، وتسوق بكل ثقة وسهولة</p>
+    <div class="hero-stats">
+      <div class="stat-item">
+        <div class="stat-num">✨</div>
+        <div class="stat-label">منتجات متنوعة</div>
+      </div>
+      <div class="stat-item">
+        <div class="stat-num">🤝</div>
+        <div class="stat-label">تواصل مباشر</div>
+      </div>
+      <div class="stat-item">
+        <div class="stat-num">🛡️</div>
+        <div class="stat-label">موثوق وآمن</div>
+      </div>
+    </div>
+  </div>
+</header>
+
+<!-- 🔹 شريط البحث -->
+<section class="search-section">
+  <div class="container">
+    <div class="search-wrapper">
+      <span class="search-icon">🔍</span>
+      <input type="text" id="searchInput" placeholder="ابحث عن منتج، تصنيف، أو مدينة..." class="search-input">
+    </div>
+  </div>
+</section>
+
+<!-- 🔹 التصنيفات -->
+<section class="categories-section">
+  <div class="container">
+    <h2 class="section-heading">تصفح الأقسام</h2>
+    <div id="categories" class="categories-grid"></div>
+  </div>
+</section>
+
+<!-- 🔹 لوحة تحكم المدير -->
+<section class="admin-dashboard" id="adminDashboard">
+  <div class="container">
+    <div class="admin-card">
+      <div class="admin-header">
+        <span class="admin-icon">🔧</span>
+        <h3>لوحة تحكم المدير</h3>
+      </div>
+      <h4>المنتجات بانتظار الموافقة:</h4>
+      <div id="pendingList"></div>
+    </div>
+  </div>
+</section>
+
+<!-- 🔹 عرض المنتجات -->
+<section class="products-section">
+  <div class="container">
+    <h2 class="section-heading">أحدث المنتجات المعروضة</h2>
+    <div id="productsContainer" class="products-grid"></div>
+  </div>
+</section>
+
+<!-- 🔹 نافذة نشر منتج جديد -->
+<div id="publishModal" class="modal-overlay">
+  <div class="modal-content">
+    <div class="modal-header">
+      <h2>📤 نشر منتج جديد</h2>
+      <button class="modal-close" onclick="closePublishModal()">&times;</button>
+    </div>
+    <form id="publishForm" class="modal-body">
+      <div class="form-group">
+        <label>اسم المنتج <span class="required">*</span></label>
+        <input type="text" id="productName" required placeholder="مثال: هاتف ذكي بحالة ممتازة">
+      </div>
+      
+      <div class="form-row">
+        <div class="form-group">
+          <label>السعر</label>
+          <input type="text" id="productPrice" placeholder="اتركه فارغاً إذا كان عند الاتصال">
+        </div>
+        <div class="form-group">
+          <label>التصنيف <span class="required">*</span></label>
+          <select id="productCategory" required></select>
+        </div>
+      </div>
+      
+      <div class="form-row">
+        <div class="form-group">
+          <label>المدينة <span class="required">*</span></label>
+          <select id="productCity" required></select>
+        </div>
+        <div class="form-group">
+          <label>رقم الهاتف/الواتساب <span class="required">*</span></label>
+          <input type="tel" id="productPhone" required placeholder="0770XXXXXXX">
+        </div>
+      </div>
+      
+      <div class="form-group">
+        <label>📷 صورة المنتج</label>
+        <div class="upload-area">
+          <label for="productImageFile" class="upload-label">
+            📸 اضغط لاختيار صورة من هاتفك
+          </label>
+          <input type="file" id="productImageFile" accept="image/*" style="display: none;">
+          <img id="imagePreview" class="image-preview" alt="معاينة الصورة">
+        </div>
+      </div>
+      
+      <div class="form-group">
+        <label>وصف المنتج</label>
+        <textarea id="productDesc" rows="3" placeholder="أذكر مميزات وحالة المنتج بدقة..."></textarea>
+      </div>
+      
+      <button type="submit" class="submit-btn">إرسال للمراجعة ✅</button>
+    </form>
+  </div>
+</div>
+
+<!-- 🔹 تذييل الصفحة -->
+<footer class="footer">
+  <div class="container">
+    <p>🛍️ سوق الصويرة © 2026 — جميع الحقوق محفوظة</p>
+    <p class="footer-note">المنتجات تظهر بعد موافقة الإدارة · تواصل مباشر مع البائع</p>
+  </div>
+</footer>
+
+<script src="app.js"></script>
+</body>
+</html>

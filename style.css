@@ -1,0 +1,31 @@
+/* منطقة رفع الصورة */
+.upload-area {
+  border: 2px dashed #d1fae5;
+  border-radius: var(--radius-md);
+  padding: 25px;
+  text-align: center;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  background: #f0fdf4;
+}
+
+.upload-area:hover {
+  border-color: var(--primary);
+  background: #d1fae5;
+}
+
+.upload-label {
+  color: var(--primary-dark);
+  font-weight: 600;
+  cursor: pointer;
+  display: block;
+}
+
+.image-preview {
+  max-width: 100%;
+  max-height: 180px;
+  margin-top: 15px;
+  border-radius: var(--radius-sm);
+  display: none;
+  object-fit: cover;
+}
